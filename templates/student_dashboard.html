@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Student Dashboard – Wellness Connect{% endblock %}
+{% block content %}
+<h1>Welcome, {{ user.name }}!</h1>
+<p style="color: #666; margin-bottom: 24px;">Student Dashboard</p>
+
+<div class="card">
+    <h2 style="margin-top: 0; color: #2d5a87;">Quick Actions</h2>
+    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+        
+        <!-- Chatbot -->
+        <a href="{% url 'student:chatbot' %}" 
+            class="btn" 
+            style="flex: 1; min-width: 150px; text-align: center;">
+            💬 Chatbot
+        </a>
+
+        <!-- Assessment -->
+        <a href="{% url 'student:assessment' %}" 
+           class="btn" 
+           style="flex: 1; min-width: 150px; text-align: center;">
+            📋 Take Assessment
+        </a>
+
+        <!-- Book Session -->
+        <a href="{% url 'student:book_session' %}" 
+           class="btn" 
+           style="flex: 1; min-width: 150px; text-align: center;">
+            📅 Book Session
+        </a>
+
+    </div>
+</div>
+
+<div class="card">
+    <h2 style="margin-top: 0; color: #2d5a87;">Your Wellness Journey</h2>
+    <p>Use the buttons above to access mental health resources and support.</p>
+    <ul style="line-height: 1.8;">
+        <li><strong>Chatbot:</strong> Get instant support and guidance</li>
+        <li><strong>Assessment:</strong> Complete PHQ-9 mental health assessment</li>
+        <li><strong>Book Session:</strong> Schedule a counselling appointment</li>
+    </ul>
+</div>
+{% endblock %}

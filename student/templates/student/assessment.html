@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block title %}PHQ-9 & GAD-7 Assessment – Wellness Connect{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>PHQ-9 & GAD-7 Assessment</h1>
+    <p>Over the last 2 weeks, how often have you been bothered by the following? (0 = Not at all, 3 = Nearly every day)</p>
+    <form method="post" action="{% url 'student:assessment' %}">
+        {% csrf_token %}
+        <h2 style="margin-top:1em;">PHQ-9 (Depression)</h2>
+        <ol style="list-style: decimal; padding-left: 20px;">
+            <li class="form-group"><label>Little interest or pleasure in doing things</label><br>
+                <select name="q1" class="form-control" style="max-width:120px;">
+                    <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                </select></li>
+            <li class="form-group"><label>Feeling down, depressed, or hopeless</label><br>
+                <select name="q2" class="form-control" style="max-width:120px;">
+                    <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                </select></li>
+            <li class="form-group"><label>Trouble falling or staying asleep</label><br>
+                <select name="q3" class="form-control" style="max-width:120px;">
+                    <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                </select></li>
+            <li class="form-group"><label>Feeling tired or little energy</label><br>
+                <select name="q4" class="form-control" style="max-width:120px;">
+                    <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                </select></li>
+            <li class="form-group"><label>Poor appetite or overeating</label><br>
+                <select name="q5" class="form-control" style="max-width:120px;">
+                    <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                </select></li>
+            <li class="form-group"><label>Feeling bad about yourself</label><br>
+                <select name="q6" class="form-control" style="max-width:120px;">
+                    <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                </select></li>
+            <li class="form-group"><label>Trouble concentrating</label><br>
+                <select name="q7" class="form-control" style="max-width:120px;">
+                    <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                </select></li>
+            <li class="form-group"><label>Moving or speaking slowly, or being fidgety</label><br>
+                <select name="q8" class="form-control" style="max-width:120px;">
+                    <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                </select></li>
+            <li class="form-group"><label>Thoughts that you would be better off dead</label><br>
+                <select name="q9" class="form-control" style="max-width:120px;">
+                    <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                </select></li>
+        </ol>
+        <h2 style="margin-top:1.5em;">GAD-7 (Anxiety)</h2>
+        <ol start="10" style="list-style: decimal; padding-left: 20px;">
+            <li class="form-group"><label>Feeling nervous, anxious, or on edge</label><br>
+                <select name="g1" class="form-control" style="max-width:120px;">
+                    <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                </select></li>
+            <li class="form-group"><label>Not being able to stop or control worrying</label><br>
+                <select name="g2" class="form-control" style="max-width:120px;">
+                    <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                </select></li>
+            <li class="form-group"><label>Worrying too much about different things</label><br>
+                <select name="g3" class="form-control" style="max-width:120px;">
+                    <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                </select></li>
+            <li class="form-group"><label>Trouble relaxing</label><br>
+                <select name="g4" class="form-control" style="max-width:120px;">
+                    <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                </select></li>
+            <li class="form-group"><label>Being so restless that it's hard to sit still</label><br>
+                <select name="g5" class="form-control" style="max-width:120px;">
+                    <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                </select></li>
+            <li class="form-group"><label>Becoming easily annoyed or irritable</label><br>
+                <select name="g6" class="form-control" style="max-width:120px;">
+                    <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                </select></li>
+            <li class="form-group"><label>Feeling afraid as if something awful might happen</label><br>
+                <select name="g7" class="form-control" style="max-width:120px;">
+                    <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                </select></li>
+        </ol>
+        <button type="submit" class="btn">Submit Assessment</button>
+    </form>
+    <p style="margin-top:16px;"><a href="{% url 'student:student_dashboard' %}">Back to Dashboard</a></p>
+</div>
+{% endblock %}

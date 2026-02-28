@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard – Wellness Connect{% endblock %}
+{% block content %}
+<h1>Admin Dashboard</h1>
+
+<div class="card">
+    <h2 style="margin-top:0;">Summary</h2>
+    <p><strong>Total users:</strong> {{ total_users }}</p>
+    <p><strong>Total high-risk students:</strong> {{ total_high_risk }}</p>
+    <p><strong>Total appointments:</strong> {{ total_appointments }}</p>
+</div>
+
+<div class="card">
+    <h2 style="margin-top:0;">Users (CRUD – delete only)</h2>
+    {% if users %}
+    <table>
+        <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Action</th></tr></thead>
+        <tbody>
+            {% for u in users %}
+            <tr>
+                <td>{{ u.name }}</td>
+                <td>{{ u.email }}</td>
+                <td>{{ u.role }}</td>
+                <td>
+                    {% if u.id != user.id %}
+                    <form method="post" action="{% url 'admin_panel:user_delete' u.id %}" style="display:inline;" onsubmit="return confirm('Delete this user?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    {% else %}
+                    <span>(you)</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No users.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Assessment Result – Wellness Connect{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>Assessment Result</h1>
+    <p><strong>PHQ-9 score:</strong> {{ phq_score }}</p>
+    <p><strong>GAD-7 score:</strong> {{ gad_score }}</p>
+    <p><strong>Final stress level:</strong> <span class="stress-badge stress-{{ final_level|lower }}">{{ final_level }}</span></p>
+    {% if final_level == 'High' %}
+    <div class="alert alert-warning" style="margin-top:16px; padding:12px; background:#f8d7da; color:#721c24; border-radius:6px;">
+        A counsellor has been notified.
+    </div>
+    {% endif %}
+    <p style="margin-top:16px;"><a href="{% url 'student:student_dashboard' %}" class="btn">Back to Dashboard</a></p>
+</div>
+<style>
+.stress-badge { padding: 4px 10px; border-radius: 6px; font-weight: 600; }
+.stress-low { background: #d4edda; color: #155724; }
+.stress-medium { background: #fff3cd; color: #856404; }
+.stress-high { background: #f8d7da; color: #721c24; }
+</style>
+{% endblock %}

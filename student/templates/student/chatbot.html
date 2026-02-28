@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %}Chatbot – Wellness Connect{% endblock %}
+
+{% block content %}
+<h1>Wellness Chatbot</h1>
+
+<div class="card">
+    <div id="chat-box" style="max-height:400px; overflow-y:auto; padding:15px; background:#f8f9fa; border-radius:8px;">
+    </div>
+
+    <div style="margin-top:15px; display:flex; gap:10px;">
+        <input type="text" id="chat-input" class="form-control" placeholder="Type your message..." style="flex:1;">
+        <button id="chat-send" class="btn">Send</button>
+    </div>
+
+    <div id="alert-box" style="display:none; margin-top:12px; padding:10px; background:#f8d7da; color:#721c24; border-radius:6px;">
+        ⚠️ We recommend booking a counselling session.
+    </div>
+</div>
+
+{% csrf_token %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    const input = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('chat-send');
+    const chatBox = document.getElementById('chat-box');
+    const alertBox = document.getElementById('alert-box');
+
+    function addMessage(text, sender) {
+        const div = document.createElement('div');
+        div.style.marginBottom = '10px';
+        div.style.padding = '8px';
+        div.style.borderRadius = '6px';
+        div.style.maxWidth = '70%';
+
+        if(sender === 'user'){
+            div.style.background = '#d1e7dd';
+            div.style.marginLeft = 'auto';
+        } else {
+            div.style.background = '#e2e3e5';
+        }
+
+        div.textContent = text;
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    sendBtn.addEventListener('click', function() {
+
+        const message = input.value.trim();
+        if(!message) return;
+
+        addMessage(message, 'user');
+        input.value = '';
+
+        const formData = new FormData();
+        formData.append('message', message);
+        formData.append('csrfmiddlewaretoken',
+            document.querySelector('[name=csrfmiddlewaretoken]').value
+        );
+
+        fetch("{% url 'student:chatbot_send' %}", {
+            method: 'POST',
+            body: formData,
+            credentials: 'same-origin'
+        })
+        .then(res => res.json())
+        .then(data => {
+            addMessage(data.response, 'bot');
+
+            if(data.show_alert){
+                alertBox.style.display = 'block';
+            } else {
+                alertBox.style.display = 'none';
+            }
+        })
+        .catch(() => {
+            addMessage("Something went wrong.", 'bot');
+        });
+    });
+});
+</script>
+{% endblock %}

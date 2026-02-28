@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Book Session – Wellness Connect{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>Book Counselling Session</h1>
+    <form method="post" action="{% url 'student:book_session' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="date">Preferred date</label>
+            <input type="date" name="date" id="date" class="form-control" style="max-width:200px;" required>
+        </div>
+        <button type="submit" class="btn">Request Appointment</button>
+    </form>
+    <p style="margin-top:16px;"><a href="{% url 'student:student_dashboard' %}">Back to Dashboard</a></p>
+</div>
+{% endblock %}
