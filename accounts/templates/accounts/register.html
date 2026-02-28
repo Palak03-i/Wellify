@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Register – Wellness Connect{% endblock %}
+{% block content %}
+<div class="card" style="max-width: 440px; margin: 40px auto;">
+    <h1>Register</h1>
+    <form method="post" action="{% url 'accounts:register' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_name">Name</label>
+            {{ form.name }}
+            {% if form.name.errors %}<span style="color:red;">{{ form.name.errors.0 }}</span>{% endif %}
+        </div>
+        <div class="form-group">
+            <label for="id_email">Email</label>
+            {{ form.email }}
+            {% if form.email.errors %}<span style="color:red;">{{ form.email.errors.0 }}</span>{% endif %}
+        </div>
+        <div class="form-group">
+            <label for="id_role">Role</label>
+            {{ form.role }}
+        </div>
+        <div class="form-group">
+            <label>{{ form.anonymous_flag }} Anonymous option</label>
+        </div>
+        <div class="form-group">
+            <label for="id_password1">Password</label>
+            {{ form.password1 }}
+            {% if form.password1.errors %}<span style="color:red;">{{ form.password1.errors.0 }}</span>{% endif %}
+        </div>
+        <div class="form-group">
+            <label for="id_password2">Confirm Password</label>
+            {{ form.password2 }}
+            {% if form.password2.errors %}<span style="color:red;">{{ form.password2.errors.0 }}</span>{% endif %}
+        </div>
+        <button type="submit" class="btn">Register</button>
+    </form>
+    <p style="margin-top: 16px;">Already have an account? <a href="{% url 'accounts:login' %}">Login</a></p>
+</div>
+{% endblock %}
