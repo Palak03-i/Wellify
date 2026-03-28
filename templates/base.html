@@ -38,6 +38,7 @@
         <div>
             {% if user.is_authenticated %}
                 <a href="{% url 'accounts:role_redirect' %}">Dashboard</a>
+                <a href="{% url 'accounts:profile' %}">My Profile</a>
                 <span>{{ user.name }} ({{ user.role }})</span>
                 <a href="{% url 'accounts:logout' %}">Logout</a>
             {% else %}
@@ -57,5 +58,65 @@
         {% block content %}{% endblock %}
     </div>
     {% block extra_js %}{% endblock %}
+    
+    <!-- Password Toggle Script -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Find all password inputs
+        const passwordInputs = document.querySelectorAll('input[type="password"]');
+        
+        passwordInputs.forEach(function(input) {
+            // Skip if already has toggle
+            if (input.parentElement.classList.contains('password-wrapper')) {
+                return;
+            }
+            
+            // Create wrapper
+            const wrapper = document.createElement('div');
+            wrapper.className = 'password-wrapper';
+            wrapper.style.position = 'relative';
+            wrapper.style.display = 'inline-block';
+            wrapper.style.width = '100%';
+            
+            // Wrap input
+            input.parentNode.insertBefore(wrapper, input);
+            wrapper.appendChild(input);
+            
+            // Create toggle button
+            const toggleBtn = document.createElement('button');
+            toggleBtn.type = 'button';
+            toggleBtn.className = 'password-toggle';
+            toggleBtn.innerHTML = '👁️';
+            toggleBtn.style.position = 'absolute';
+            toggleBtn.style.right = '10px';
+            toggleBtn.style.top = '50%';
+            toggleBtn.style.transform = 'translateY(-50%)';
+            toggleBtn.style.border = 'none';
+            toggleBtn.style.background = 'transparent';
+            toggleBtn.style.cursor = 'pointer';
+            toggleBtn.style.fontSize = '18px';
+            toggleBtn.style.padding = '5px';
+            toggleBtn.style.lineHeight = '1';
+            toggleBtn.setAttribute('aria-label', 'Toggle password visibility');
+            
+            // Add toggle functionality
+            toggleBtn.addEventListener('click', function() {
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    toggleBtn.innerHTML = '🙈';
+                } else {
+                    input.type = 'password';
+                    toggleBtn.innerHTML = '👁️';
+                }
+            });
+            
+            // Add button to wrapper
+            wrapper.appendChild(toggleBtn);
+            
+            // Adjust input padding to make room for button
+            input.style.paddingRight = '40px';
+        });
+    });
+    </script>
 </body>
 </html>
