@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% block title %}Manage Users - Admin Panel{% endblock %}
+{% block content %}
+<style>
+    .manage-users-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+    .users-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .users-table thead {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    .users-table th {
+        padding: 16px;
+        text-align: left;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 0.5px;
+    }
+    .users-table td {
+        padding: 16px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .users-table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+    .users-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    .role-badge {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .role-student {
+        background-color: #e3f2fd;
+        color: #1565c0;
+    }
+    .role-counsellor {
+        background-color: #fff3e0;
+        color: #e65100;
+    }
+    .role-admin {
+        background-color: #f3e5f5;
+        color: #6a1b9a;
+    }
+    .action-btn {
+        display: inline-block;
+        padding: 8px 16px;
+        margin-right: 8px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
+    }
+    .btn-edit {
+        background-color: #2196F3;
+        color: white;
+    }
+    .btn-edit:hover {
+        background-color: #1976D2;
+        transform: translateY(-2px);
+    }
+    .btn-delete {
+        background-color: #f44336;
+        color: white;
+    }
+    .btn-delete:hover {
+        background-color: #d32f2f;
+        transform: translateY(-2px);
+    }
+    .btn-back {
+        background-color: #757575;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 14px;
+        display: inline-block;
+        margin-top: 20px;
+    }
+    .btn-back:hover {
+        background-color: #616161;
+    }
+    .user-name {
+        font-weight: 600;
+        color: #333;
+    }
+    .user-email {
+        color: #666;
+        font-size: 14px;
+    }
+    .you-label {
+        color: #999;
+        font-size: 12px;
+        font-style: italic;
+    }
+    .message {
+        padding: 12px 16px;
+        margin-bottom: 20px;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+    .message-success {
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+    }
+    .message-error {
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+    }
+    .message-warning {
+        background-color: #fff3cd;
+        border: 1px solid #ffeaa7;
+        color: #856404;
+    }
+</style>
+
+<div class="manage-users-container">
+    <div class="page-header">
+        <h1>👥 View All Users</h1>
+        <p style="color: #666; margin: 5px 0 0 0; font-size: 14px;">📋 View-only mode - No editing or deletion allowed</p>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message message-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card" style="padding: 0; overflow: hidden;">
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>
+                        <div class="user-name">{{ user.name }}</div>
+                    </td>
+                    <td>
+                        <div class="user-email">{{ user.email }}</div>
+                    </td>
+                    <td>
+                        <span class="role-badge 
+                            {% if user.role == 'Student' %}role-student
+                            {% elif user.role == 'Counsellor' %}role-counsellor
+                            {% elif user.role == 'Admin' %}role-admin
+                            {% endif %}">
+                            {{ user.role }}
+                        </span>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" style="padding: 40px; text-align: center; color: #999;">
+                        No users found.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <a href="{% url 'admin_panel:admin_dashboard' %}" class="btn-back">← Back to Dashboard</a>
+</div>
+
+{% endblock %}
