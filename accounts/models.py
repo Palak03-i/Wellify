@@ -43,6 +43,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255)
     role = models.CharField(max_length=20, choices=ROLES)
     anonymous_flag = models.BooleanField(default=False)
+    date_joined = models.DateTimeField(auto_now_add=True)
 
     # Risk engine fields (do not remove; used by risk_engine.py)
     risk_score = models.IntegerField(default=0)
