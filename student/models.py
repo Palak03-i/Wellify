@@ -13,7 +13,10 @@ class ChatLog(Document):
     stress_level = StringField(required=True)  # 'Low', 'Medium', 'High'
     timestamp = DateTimeField(default=datetime.utcnow)
 
-    meta = {'collection': 'chat_logs'}
+    meta = {
+        'collection': 'chat_logs',
+        'indexes': ['user_id', '-timestamp']
+    }
 
 
 class Assessment(Document):
@@ -28,7 +31,10 @@ class Assessment(Document):
     final_level = StringField(default='')  # 'Low', 'Medium', 'High'
     created_at = DateTimeField(default=datetime.utcnow)
 
-    meta = {'collection': 'assessments'}
+    meta = {
+        'collection': 'assessments',
+        'indexes': ['user_id', '-created_at', 'stress_level']
+    }
 
 
 class Appointment(Document):
@@ -37,4 +43,57 @@ class Appointment(Document):
     date = StringField(required=True)  # e.g. "2024-02-20"
     status = StringField(required=True, default='Pending')  # Pending, Approved, Completed
 
-    meta = {'collection': 'appointments'}
+    meta = {
+        'collection': 'appointments',
+        'indexes': ['student_id', 'counsellor_id', 'status']
+    }
+
+
+class MeditationGuide(Document):
+    """Pre-loaded meditation guides with videos."""
+    title = StringField(required=True)
+    description = StringField()
+    video_url = StringField()  # YouTube embed URL
+    duration = IntField()  # in minutes
+    difficulty = StringField(default='Beginner')  # Beginner, Intermediate, Advanced
+    created_at = DateTimeField(default=datetime.utcnow)
+
+    meta = {'collection': 'meditation_guides'}
+
+
+class BreathingExercise(Document):
+    """Pre-loaded breathing techniques."""
+    title = StringField(required=True)
+    description = StringField()
+    instructions = StringField()  # Step-by-step guide
+    video_url = StringField()  # YouTube embed URL
+    duration = IntField()  # in minutes
+    created_at = DateTimeField(default=datetime.utcnow)
+
+    meta = {'collection': 'breathing_exercises'}
+
+
+class JournalEntry(Document):
+    """Student journal entries for mood tracking and reflection."""
+    user_id = IntField(required=True)
+    content = StringField(required=True)
+    mood = StringField()  # Happy, Sad, Anxious, Calm, etc.
+    stress_level = StringField()  # Low, Medium, High
+    created_at = DateTimeField(default=datetime.utcnow)
+
+    meta = {
+        'collection': 'journal_entries',
+        'indexes': ['user_id', '-created_at']
+    }
+
+
+class MotivationalContent(Document):
+    """Motivational quotes and articles."""
+    title = StringField(required=True)
+    content = StringField(required=True)  # Quote or article text
+    author = StringField()  # Author/source
+    category = StringField()  # Inspiration, Recovery, Resilience, etc.
+    image_url = StringField()  # Optional image
+    created_at = DateTimeField(default=datetime.utcnow)
+
+    meta = {'collection': 'motivational_content'}

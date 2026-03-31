@@ -1,0 +1,251 @@
+{% extends 'base.html' %}
+{% block title %}ERP/LMS Integration – Wellness Connect{% endblock %}
+{% block content %}
+<style>
+    .erp-header {
+        margin-bottom: 30px;
+    }
+    .erp-header h1 {
+        margin: 0 0 5px 0;
+        color: #2d5a87;
+    }
+    .erp-header p {
+        margin: 0;
+        color: #666;
+        font-size: 14px;
+    }
+    
+    .status-card {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    .status-indicator {
+        display: inline-block;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        margin: 0 auto 20px;
+    }
+    .status-indicator.connected {
+        background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+        color: white;
+    }
+    .status-indicator.disconnected {
+        background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        color: white;
+    }
+    .status-text {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    .status-text.connected {
+        color: #27ae60;
+    }
+    .status-text.disconnected {
+        color: #95a5a6;
+    }
+    
+    .action-btn {
+        padding: 12px 30px;
+        border-radius: 8px;
+        border: none;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .action-btn:hover {
+        transform: translateY(-2px);
+    }
+    .btn-connect {
+        background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+        color: white;
+    }
+    .btn-disconnect {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        color: white;
+    }
+    
+    .upload-section {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+    .upload-section h2 {
+        margin: 0 0 20px 0;
+        color: #2d5a87;
+        font-size: 20px;
+    }
+    .upload-area {
+        border: 2px dashed #ddd;
+        border-radius: 8px;
+        padding: 40px;
+        text-align: center;
+        background: #f8f9fa;
+        margin-bottom: 20px;
+    }
+    .upload-icon {
+        font-size: 48px;
+        margin-bottom: 15px;
+        color: #95a5a6;
+    }
+    .file-input {
+        display: none;
+    }
+    .file-label {
+        display: inline-block;
+        padding: 10px 20px;
+        background: #3498db;
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background 0.2s;
+    }
+    .file-label:hover {
+        background: #2980b9;
+    }
+    .file-name {
+        margin-top: 15px;
+        color: #666;
+        font-size: 14px;
+    }
+    
+    .info-box {
+        background: #e3f2fd;
+        border-left: 4px solid #2196F3;
+        padding: 15px 20px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+    }
+    .info-box h3 {
+        margin: 0 0 10px 0;
+        color: #1565c0;
+        font-size: 16px;
+    }
+    .info-box ul {
+        margin: 0;
+        padding-left: 20px;
+        color: #1565c0;
+    }
+    .info-box li {
+        margin: 5px 0;
+    }
+    
+    .sample-csv {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 6px;
+        font-family: monospace;
+        font-size: 13px;
+        margin-top: 15px;
+    }
+</style>
+
+<div class="erp-header">
+    <h1>🔗 ERP/LMS Integration</h1>
+    <p>Connect and sync users from your institution's ERP or LMS system</p>
+</div>
+
+<!-- Connection Status -->
+<div class="status-card">
+    {% if connection_status %}
+    <div class="status-indicator connected">✓</div>
+    <div class="status-text connected">Connected</div>
+    <p style="color: #666; margin-bottom: 20px;">System is connected and ready to sync</p>
+    <form method="POST" style="display: inline;">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="disconnect">
+        <button type="submit" class="action-btn btn-disconnect">
+            🔌 Disconnect
+        </button>
+    </form>
+    {% else %}
+    <div class="status-indicator disconnected">✕</div>
+    <div class="status-text disconnected">Not Connected</div>
+    <p style="color: #666; margin-bottom: 20px;">Connect to start syncing users</p>
+    <form method="POST" style="display: inline;">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="connect">
+        <button type="submit" class="action-btn btn-connect">
+            🔗 Connect to ERP/LMS
+        </button>
+    </form>
+    {% endif %}
+</div>
+
+<!-- CSV Upload Section -->
+{% if connection_status %}
+<div class="upload-section">
+    <h2>📤 Upload Users from CSV</h2>
+    
+    <div class="info-box">
+        <h3>CSV Format Requirements:</h3>
+        <ul>
+            <li>Columns: <strong>name, email, role</strong></li>
+            <li>Role must be: Student, Counsellor, or Admin</li>
+            <li>Default password: <strong>Welcome@123</strong></li>
+            <li>Duplicate emails will be skipped</li>
+        </ul>
+    </div>
+    
+    <form method="POST" enctype="multipart/form-data" id="uploadForm">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="upload_csv">
+        
+        <div class="upload-area">
+            <div class="upload-icon">📁</div>
+            <p style="color: #666; margin-bottom: 15px;">Select a CSV file to upload</p>
+            <input type="file" name="csv_file" id="csvFile" class="file-input" accept=".csv" required>
+            <label for="csvFile" class="file-label">Choose File</label>
+            <div class="file-name" id="fileName">No file selected</div>
+        </div>
+        
+        <button type="submit" class="action-btn btn-connect" style="width: 100%;">
+            ⬆️ Upload and Create Users
+        </button>
+    </form>
+    
+    <div class="sample-csv">
+        <strong>Sample CSV Format:</strong><br>
+        name,email,role<br>
+        John Doe,john@example.com,Student<br>
+        Jane Smith,jane@example.com,Counsellor<br>
+        Admin User,admin@example.com,Admin
+    </div>
+</div>
+{% else %}
+<div class="upload-section" style="text-align: center; padding: 60px 30px;">
+    <div style="font-size: 48px; margin-bottom: 20px; color: #95a5a6;">🔒</div>
+    <h3 style="color: #95a5a6; margin: 0;">Please connect to ERP/LMS first</h3>
+    <p style="color: #999;">You need to establish a connection before uploading users</p>
+</div>
+{% endif %}
+
+<div style="margin-top: 30px; text-align: center;">
+    <a href="{% url 'admin_panel:admin_dashboard' %}" class="btn">← Back to Dashboard</a>
+</div>
+
+<script>
+// Show selected file name
+document.getElementById('csvFile').addEventListener('change', function(e) {
+    const fileName = e.target.files[0] ? e.target.files[0].name : 'No file selected';
+    document.getElementById('fileName').textContent = fileName;
+});
+</script>
+
+{% endblock %}
